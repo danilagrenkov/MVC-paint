@@ -1,3 +1,5 @@
+
+
 package org.example.view;
 
 import org.example.controller.Controller;
@@ -13,20 +15,20 @@ import javax.swing.JPanel;
 
 
 public class MyPanel extends JPanel implements Observer {
-    private Controller controller;
+    private Controller singleton;
 
     public MyPanel(Controller controller) {
-        this.controller = controller;
+        this.singleton = controller;
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent arg0) {
-                controller.getPointOne(arg0.getPoint());
+                controller.mousePressedAction(arg0.getPoint());
             }
         });
         addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent arg0) {
-                controller.getPointTwo(arg0.getPoint());
+                controller.mouseDraggedAction(arg0.getPoint());
             }
         });
     }
@@ -35,7 +37,7 @@ public class MyPanel extends JPanel implements Observer {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
-        controller.draw(g2);
+        singleton.draw(g2);
     }
 
     @Override
