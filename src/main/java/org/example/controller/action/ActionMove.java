@@ -1,9 +1,8 @@
 
 package org.example.controller.action;
-
+import org.example.controller.factory.ShapeCreationFactory;
 import org.example.model.Model;
 import org.example.model.MyShape;
-
 import java.awt.*;
 import java.awt.geom.Point2D;
 
@@ -18,6 +17,7 @@ public class ActionMove implements AppAction {
     }
 
     public void mousePressed(Point point) {
+        firstPoint = point;
         shape = model.getShapeList()
                 .stream()
                 .filter(myShape -> myShape.getShape().contains(point))
@@ -26,7 +26,7 @@ public class ActionMove implements AppAction {
     }
 
     public void mouseDragged(Point point) {
-
+        secondPoint = point;
         if (shape == null){
             return;
         }

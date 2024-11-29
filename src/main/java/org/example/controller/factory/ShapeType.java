@@ -1,7 +1,7 @@
 package org.example.controller.factory;
 
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.RectangularShape;
 
 public enum ShapeType {
@@ -10,7 +10,9 @@ public enum ShapeType {
         public RectangularShape createShape() {
             return new Rectangle2D.Double();
         }
-    }, ELLIPSE{
+    },
+
+    ELLIPSE{
         @Override
         public RectangularShape createShape() {
             return new Ellipse2D.Double();
