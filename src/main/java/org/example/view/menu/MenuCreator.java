@@ -5,8 +5,9 @@ import lombok.Setter;
 import org.example.controller.action.ActionDraw;
 import org.example.controller.action.ActionMove;
 import org.example.controller.action.AppAction;
-import org.example.controller.factory.MenuState;
-import org.example.controller.factory.ShapeType;
+import org.example.controller.state.UndoMachine;
+import org.example.model.factory.MenuState;
+import org.example.model.factory.ShapeType;
 import org.example.model.Model;
 import org.example.model.MyShape;
 
@@ -25,6 +26,7 @@ public class MenuCreator {
     private Model model;
     private MyShape shape;
     private MenuState state;
+    private UndoMachine undoMachine;
     private JRadioButtonMenuItem rgbButton;
 
     public Model getModel() {
@@ -115,10 +117,10 @@ public class MenuCreator {
         JMenu shapeMenu = new JMenu("Действие");
         ButtonGroup group = new ButtonGroup();
 
-        JRadioButtonMenuItem square = new JRadioButtonMenuItem("Рисовать");
-        square.addActionListener(e -> state.setAction(new ActionDraw(model, shape)));
-        shapeMenu.add(square);
-        group.add(square);
+        JRadioButtonMenuItem draw = new JRadioButtonMenuItem("Рисовать");
+        draw.addActionListener(e -> state.setAction(new ActionDraw(model, shape)));
+        shapeMenu.add(draw);
+        group.add(draw);
 
         JRadioButtonMenuItem ellipse = new JRadioButtonMenuItem("Двигать");
         ellipse.addActionListener(e -> state.setAction(new ActionMove(model)));
@@ -187,6 +189,23 @@ public class MenuCreator {
         AppCommand moveCommand = new SwitchAction(state, new ActionMove(model));
         menuItems.add(new CommandActionListener("Двигать", moveIco, moveCommand));
 
+        URL redoUrl = getClass().getClassLoader().getResource("ico/redo_16x16.png");
+        ImageIcon redoIco = redoUrl == null ? null : new ImageIcon(redoUrl);
+        AppCommand redoC = new SwitchRedo(undoMachine);
+        CommandActionListener redoListeenr = new CommandActionListener("Вперед-назад", redoIco, redoC);
+        menuItems.add(redoListeenr);
+
+        URL undoUrl = getClass().getClassLoader().getResource("ico/undo_16x16.png");
+        ImageIcon undoIco = undoUrl == null ? null : new ImageIcon(undoUrl);
+        AppCommand undoC = new SwitchUndo(undoMachine);
+        CommandActionListener undoListener = new CommandActionListener("Вперед-назад", undoIco, undoC);
+        menuItems.add(undoListener);
+        undoMachine.setUndo(undoListener);
+        undoListener.setEnabled(false);
+        undoMachine.setRedo(redoListeenr);
+        redoListeenr.setEnabled(false);
+
+
         return menuItems;
 
     }
@@ -196,6 +215,9 @@ public class MenuCreator {
     }
     public void setState(MenuState state) {
         this.state = state;
+    }
+    public void setUndoMachine(UndoMachine undoMachine) {
+        this.undoMachine = undoMachine;
     }
 
 

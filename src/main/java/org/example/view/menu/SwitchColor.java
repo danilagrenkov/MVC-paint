@@ -1,5 +1,5 @@
 package org.example.view.menu;
-import org.example.controller.factory.MenuState;
+import org.example.model.factory.MenuState;
 
 import javax.swing.*;
 import java.awt.*;

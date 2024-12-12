@@ -1,16 +1,20 @@
 package org.example.controller.state;
 
 import org.example.controller.action.AppAction;
+import org.example.view.menu.CommandActionListener;
 
 import java.util.LinkedList;
 
 public class UndoMachine {
     private UndoRedoState undoRedoState;
+    private CommandActionListener undo;
+    private CommandActionListener redo;
 
     public UndoMachine() {
         LinkedList<AppAction> undoList = new LinkedList<>();
         LinkedList<AppAction> redoList = new LinkedList<>();
         undoRedoState = new StateDisableUndoDisableRedo(undoList, redoList);
+
     }
 
     public void executeRedo() {
@@ -33,7 +37,18 @@ public class UndoMachine {
     public void add(AppAction action) {
         undoRedoState.clearHistory();
         undoRedoState.addAction(action);
-        //TODO: Определить переход по состоянию
-        //undoRedoState = ;
+        undoRedoState = new StateEnableUndoDisableRedo(undoRedoState.getUndoActivityList(), undoRedoState.getRedoActivityList());
+    }
+    public void updateButtons() {
+        undo.setEnabled(isEnableUndo());
+        redo.setEnabled(isEnableRedo());
+
+    }
+    public void setUndo(CommandActionListener undo) {
+        this.undo = undo;
+    }
+
+    public void setRedo(CommandActionListener redo) {
+        this.redo = redo;
     }
 }
